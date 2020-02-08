@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="GlobalMarket.GlobalMarketControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:GlobalMarket"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <local:GlobalMarketConfig />
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.Resources>
+            <Style x:Key="ControlBaseStyle" TargetType="{x:Type FrameworkElement}">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ControlBaseStyle}" />
+            <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource ControlBaseStyle}" />
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ControlBaseStyle}" />
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" SharedSizeGroup="Labels" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" SharedSizeGroup="Buttons" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="How many orders a player can create(0 for infinity)" />
+        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding OrderCountLimitPerPlayer}" />
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="Tax rate(percentage)" />
+        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding TaxRate}" />
+
+        <Button Grid.Row="2" Grid.Column="2" Content="Save Config" Click="SaveButton_OnClick" />
+    </Grid>
+</UserControl>
