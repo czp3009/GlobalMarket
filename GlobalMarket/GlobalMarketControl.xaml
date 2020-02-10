@@ -16,6 +16,7 @@
             </Style>
             <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource ControlBaseStyle}" />
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource ControlBaseStyle}" />
+            <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource ControlBaseStyle}" />
             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource ControlBaseStyle}" />
         </Grid.Resources>
 
@@ -28,6 +29,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" Grid.Column="0" Text="How many orders a player can create(0 for infinity)" />
@@ -36,6 +42,21 @@
         <TextBlock Grid.Row="1" Grid.Column="0" Text="Tax rate(percentage)" />
         <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding TaxRate}" />
 
-        <Button Grid.Row="2" Grid.Column="2" Content="Save Config" Click="SaveButton_OnClick" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="Can repurchase player's own order" />
+        <CheckBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding CanRepurchaseOwnOrder}" />
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="Can repurchase faction order" />
+        <CheckBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding CanRepurchaseFactionOrder}" />
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="Broadcast on sell" />
+        <CheckBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding BroadcastOnSell}" />
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="Broadcast on buy" />
+        <CheckBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding BroadcastOnBuy}" />
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="Send message to seller when order is purchased" />
+        <CheckBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" IsChecked="{Binding NotifySellerOnBuy}" />
+
+        <Button Grid.Row="7" Grid.Column="2" Content="Save Config" Click="SaveButton_OnClick" />
     </Grid>
 </UserControl>

@@ -18,17 +18,12 @@ A Torch plugin that let players sell and buy items to and from market via comman
 
 !market longmy - Show my items in market with dialog
 
-# Config
-OrderCountLimitPerPlayer - How many orders a player can create(0 for infinity)
-
-TaxRate - Tax rate(percentage)
-
 # Note
-If player aim at CargoContainer, item will delivery to CargoContainer first when use "!market buy".
+If player aim at CargoContainer and have permission to access it, item will delivery to CargoContainer first when use "!market buy".
 
-"!market sell" will take items from player inventory first.
+"!market sell" will take items from player inventory first, then from CargoContainer.
 
-Taxes are borne by the seller.
+Tax are borne by the seller.
 
 # License
 Apache License 2.0

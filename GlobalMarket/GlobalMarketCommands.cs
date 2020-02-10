@@ -56,7 +56,7 @@ namespace GlobalMarket
         [Permission(MyPromoteLevel.None)]
         public void Inventory()
         {
-            if (!CheckIsPlayer(out var player)) return;
+            if (!CheckIsPlayer(out _)) return;
 
             IEnumerable<string> Format(MyInventoryBase inventory) => inventory.GetItems()
                 .GroupBy(
@@ -69,12 +69,12 @@ namespace GlobalMarket
                 )
                 .Select(it => $"{it.physicalObject.TypeId}/{it.physicalObject.SubtypeName}({it.amount})");
 
-            if (TryGetPlayerInventory(player, out var playerInventory))
+            if (TryGetPlayerInventory(out var playerInventory))
             {
                 Respond("Items in your inventory:", Format(playerInventory));
             }
 
-            if (TryGetAimedCargoInventory(player, out var aimedInventory))
+            if (TryGetAimedHavePermissionCargoInventory(out var aimedInventory))
             {
                 Respond("Items in CargoContainer:", Format(aimedInventory));
             }
@@ -98,10 +98,10 @@ namespace GlobalMarket
                 return;
             }
 
-            var playerInventory = GetPlayerInventory(player);
+            var playerInventory = GetPlayerInventory();
             var playerInventoryItems =
                 playerInventory?.GetItems() ?? Enumerable.Empty<MyPhysicalInventoryItem>().ToList();
-            var cargoInventory = GetAimedCargoInventory(player);
+            var cargoInventory = GetAimedHavePermissionCargoInventory();
             var cargoInventoryItems =
                 cargoInventory?.GetItems() ?? Enumerable.Empty<MyPhysicalInventoryItem>().ToList();
             if (playerInventoryItems.Count == 0 && cargoInventoryItems.Count == 0)
@@ -193,7 +193,9 @@ namespace GlobalMarket
 
             var orderNumber =
                 Plugin.AddNewPurchaseOrder(new PurchaseOrder(player.IdentityId, definitionId, need, price));
-            Respond($"Selling {definitionId}({amount}) to market for ${price}, order number: {orderNumber}");
+            var s = $"{definitionId}({amount}) to market for ${price}, order number: {orderNumber}";
+            if (Config.BroadcastOnSell) SendMessage($"Player '{player.DisplayName}' sold {s}");
+            else Respond($"Selling {s}");
         }
 
         [Command("buy", "Buy items from market")]
@@ -208,6 +210,26 @@ namespace GlobalMarket
                 return;
             }
 
+            var sellerIdentityId = purchaseOrder.SellerIdentityId;
+            var isSelfOrder = sellerIdentityId == player.IdentityId;
+            if (!Config.CanRepurchaseOwnOrder && isSelfOrder)
+            {
+                Respond("Can't repurchase your own order");
+                return;
+            }
+
+            var sellerNotExist = !MySession.Static.Players.HasIdentity(sellerIdentityId);
+            if (sellerNotExist)
+            {
+                Log.Error($"Seller {sellerIdentityId} of order <{orderNumber}> not exists!");
+            }
+            else if (!Config.CanRepurchaseFactionOrder && !isSelfOrder &&
+                     MySession.Static.Factions.GetPlayerFaction(sellerIdentityId)?.IsMember(player.IdentityId) == true)
+            {
+                Respond("Can't repurchase your faction order");
+                return;
+            }
+
             if (!player.TryGetBalanceInfo(out var balance) || balance < purchaseOrder.Price)
             {
                 Respond($"No enough money, need {purchaseOrder.Price} but you only have {balance}");
@@ -218,14 +240,14 @@ namespace GlobalMarket
                 !MyDefinitionManager.Static.TryGetPhysicalItemDefinition(definitionId, out _))
             {
                 Respond(
-                    "This order contains invalid DefinitionId, may cause by mod changing or data corruption, please contact GM"
+                    $"The order <{orderNumber}> contains invalid DefinitionId, may cause by mod changing or data corruption, please contact GM"
                 );
                 return;
             }
 
-            var playerInventory = GetPlayerInventory(player);
+            var playerInventory = GetPlayerInventory();
             var canAddToPlayerInventory = playerInventory?.ComputeAmountThatFits(definitionId) ?? MyFixedPoint.Zero;
-            var cargoInventory = GetAimedCargoInventory(player);
+            var cargoInventory = GetAimedHavePermissionCargoInventory();
             var canAddToCargoInventory = cargoInventory?.ComputeAmountThatFits(definitionId) ?? MyFixedPoint.Zero;
 
             //totalCanAdd may overflow
@@ -263,26 +285,22 @@ namespace GlobalMarket
             Respond($"You bought {definitionId} ({purchaseOrder.Amount}) for ${purchaseOrder.Price}");
 
             //if seller not exist
-            var sellerIdentityId = purchaseOrder.SellerIdentityId;
-            var sellerIdentity = MySession.Static.Players.TryGetIdentity(sellerIdentityId);
-            if (sellerIdentity == null)
+            if (sellerNotExist) return;
+
+            var tax = (long) (Config.IllegalTaxRateDouble * purchaseOrder.Price);
+            MyBankingSystem.RequestBalanceChange(sellerIdentityId, purchaseOrder.Price - tax);
+
+            var s = $"<{orderNumber}> purchased by '{player.DisplayName}' for ${purchaseOrder.Price}(tax ${tax})";
+            if (Config.BroadcastOnBuy)
             {
-                Log.Error($"Seller {sellerIdentityId} not exists!");
-                return;
+                SendMessage($"The order {s}");
             }
-
-            var taxRate = Config.TaxRate;
-            if (taxRate > 100) taxRate = 100;
-            var tax = (long) (taxRate / 100D * purchaseOrder.Price);
-            var actualEarn = purchaseOrder.Price - tax;
-            MyBankingSystem.RequestBalanceChange(sellerIdentityId, actualEarn);
-
-            //if seller online, send message to him
-            if (MySession.Static.Players.TryGetPlayerId(sellerIdentityId, out var sellerPlayerId) &&
-                MySession.Static.Players.IsPlayerOnline(ref sellerPlayerId))
+            else if (Config.NotifySellerOnBuy &&
+                     MySession.Static.Players.TryGetPlayerId(sellerIdentityId, out var sellerPlayerId) &&
+                     MySession.Static.Players.IsPlayerOnline(ref sellerPlayerId))
             {
                 SendMessage(
-                    $"Your order <{orderNumber}> bought by '{player.DisplayName}', you earn ${actualEarn}",
+                    $"Your order {s}",
                     sellerPlayerId.SteamId
                 );
             }
@@ -379,15 +397,9 @@ namespace GlobalMarket
         private void Respond(string s, IEnumerable<string> enumerable) =>
             Context.Respond(string.Join(Environment.NewLine, enumerable.Prepend(s)));
 
-        private static MyInventory GetPlayerInventory(IMyPlayer player)
+        private bool TryGetPlayerInventory(out MyInventory inventory)
         {
-            TryGetPlayerInventory(player, out var inventory);
-            return inventory;
-        }
-
-        private static bool TryGetPlayerInventory(IMyPlayer player, out MyInventory inventory)
-        {
-            if (player.Character is MyCharacter character)
+            if (Context.Player.Character is MyCharacter character)
             {
                 inventory = character.GetInventory();
                 return true;
@@ -397,27 +409,51 @@ namespace GlobalMarket
             return false;
         }
 
-        private static MyInventory GetAimedCargoInventory(IMyPlayer player)
+        private MyInventory GetPlayerInventory()
         {
-            TryGetAimedCargoInventory(player, out var inventory);
+            TryGetPlayerInventory(out var inventory);
             return inventory;
         }
 
-        private static bool TryGetAimedCargoInventory(IMyPlayer player, out MyInventory inventory)
+        private bool TryGetAimedCargo(out MyCubeBlock cubeBlock)
         {
-            if (player.Character is MyCharacter character && character.AimedBlock != default)
+            if (Context.Player.Character is MyCharacter character && character.AimedGrid != 0)
             {
                 var aimedBlock = (MyEntities.GetEntityById(character.AimedGrid) as MyCubeGrid)
                     ?.GetCubeBlock(character.AimedBlock);
                 if (aimedBlock?.BlockDefinition is MyCargoContainerDefinition)
                 {
-                    inventory = aimedBlock.FatBlock.GetInventory();
+                    cubeBlock = aimedBlock.FatBlock;
                     return true;
                 }
             }
 
-            inventory = null;
+            cubeBlock = null;
             return false;
+        }
+
+        private bool TryGetAimedHavePermissionCargoInventory(out MyInventory inventory)
+        {
+            inventory = null;
+            if (!TryGetAimedCargo(out var cubeBlock)) return false;
+            if (cubeBlock.OwnerId == 0)
+            {
+                inventory = cubeBlock.GetInventory();
+                return true;
+            }
+
+            var relation = cubeBlock.GetUserRelationToOwner(Context.Player.IdentityId);
+            if (relation != MyRelationsBetweenPlayerAndBlock.Owner &&
+                relation != MyRelationsBetweenPlayerAndBlock.FactionShare)
+                return false;
+            inventory = cubeBlock.GetInventory();
+            return true;
+        }
+
+        private MyInventory GetAimedHavePermissionCargoInventory()
+        {
+            TryGetAimedHavePermissionCargoInventory(out var inventory);
+            return inventory;
         }
 
         private void SendMessage(string message, ulong targetSteamId = 0)
