@@ -1,166 +1,164 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props"
-            Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-    <PropertyGroup>
-        <ProjectGuid>{025E099C-C046-4D4A-89C4-D770FE485E16}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>GlobalMarket</RootNamespace>
-        <AssemblyName>GlobalMarket</AssemblyName>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <FileAlignment>512</FileAlignment>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-        <PlatformTarget>x64</PlatformTarget>
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>full</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug\</OutputPath>
-        <DefineConstants>DEBUG;TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-        <PlatformTarget>x64</PlatformTarget>
-        <DebugType>pdbonly</DebugType>
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release\</OutputPath>
-        <DefineConstants>TRACE</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="System.Core" />
-        <Reference Include="System.Data" />
-        <Reference Include="System.Xml" />
-        <Reference Include="System.Xml.Linq" />
-        <Reference Include="System.Xaml" />
-        <Reference Include="WindowsBase" />
-        <Reference Include="System.Windows.Presentation" />
-        <Reference Include="PresentationCore" />
-        <Reference Include="PresentationFramework" />
-    </ItemGroup>
-    <ItemGroup>
-        <Reference Include="Sandbox.Common">
-            <HintPath>$(SolutionDir)\GameBinaries\Sandbox.Common.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Sandbox.Game">
-            <HintPath>$(SolutionDir)\GameBinaries\Sandbox.Game.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Sandbox.Graphics">
-            <HintPath>$(SolutionDir)\GameBinaries\Sandbox.Graphics.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SpaceEngineers.Game">
-            <HintPath>$(SolutionDir)\GameBinaries\SpaceEngineers.Game.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SpaceEngineers.ObjectBuilders">
-            <HintPath>$(SolutionDir)\GameBinaries\SpaceEngineers.ObjectBuilders.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SpaceEngineers.ObjectBuilders.XmlSerializers">
-            <HintPath>$(SolutionDir)\GameBinaries\SpaceEngineers.ObjectBuilders.XmlSerializers.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Torch">
-            <HintPath>$(SolutionDir)\TorchBinaries\Torch.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Torch.API">
-            <HintPath>$(SolutionDir)\TorchBinaries\Torch.API.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Torch.Server">
-            <HintPath>$(SolutionDir)\TorchBinaries\Torch.Server.exe</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="HavokWrapper">
-            <HintPath>$(SolutionDir)\GameBinaries\HavokWrapper.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Audio">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Audio.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Dedicated">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Dedicated.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Game">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Game.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Game.XmlSerializers">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Game.XmlSerializers.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Input">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Input.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Library">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Library.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Math">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Math.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.NativeWrapper">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.NativeWrapper.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Render">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Render.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Render11">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Render11.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="VRage.Scripting">
-            <HintPath>$(SolutionDir)\GameBinaries\VRage.Scripting.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="NLog">
-            <HintPath>$(SolutionDir)\TorchBinaries\NLog.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="GlobalMarketCommands.cs" />
-        <Compile Include="GlobalMarketConfig.cs" />
-        <Compile Include="PurchaseOrder.cs" />
-        <Compile Include="XmlExtensions.cs" />
-        <Page Include="GlobalMarketControl.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <SubType>Designer</SubType>
-        </Page>
-        <Compile Include="GlobalMarketControl.xaml.cs">
-            <DependentUpon>GlobalMarketControl.xaml</DependentUpon>
-            <SubType>Code</SubType>
-        </Compile>
-        <Compile Include="GlobalMarketPlugin.cs" />
-        <Compile Include="MyObjectBuilderPhysicalObjectComparer.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <Content Include="manifest.xml" CopyToOutputDirectory="PreserveNewest" />
-    </ItemGroup>
-    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <Target Name="Zip" BeforeTargets="AfterBuild" Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-        <MakeDir Directories="$(MSBuildProjectDirectory)\zip" />
-        <ZipDirectory SourceDirectory="$(OutputPath)"
-                      DestinationFile="$(MSBuildProjectDirectory)\zip\$(MSBuildProjectName).zip" Overwrite="true" />
-    </Target>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <ProjectGuid>{025E099C-C046-4D4A-89C4-D770FE485E16}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GlobalMarket</RootNamespace>
+    <AssemblyName>GlobalMarket</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System.Windows.Presentation" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Sandbox.Common">
+      <HintPath>$(SolutionDir)\GameBinaries\Sandbox.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sandbox.Game">
+      <HintPath>$(SolutionDir)\GameBinaries\Sandbox.Game.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Sandbox.Graphics">
+      <HintPath>$(SolutionDir)\GameBinaries\Sandbox.Graphics.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SpaceEngineers.Game">
+      <HintPath>$(SolutionDir)\GameBinaries\SpaceEngineers.Game.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SpaceEngineers.ObjectBuilders">
+      <HintPath>$(SolutionDir)\GameBinaries\SpaceEngineers.ObjectBuilders.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SpaceEngineers.ObjectBuilders.XmlSerializers">
+      <HintPath>$(SolutionDir)\GameBinaries\SpaceEngineers.ObjectBuilders.XmlSerializers.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Torch">
+      <HintPath>$(SolutionDir)\TorchBinaries\Torch.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Torch.API">
+      <HintPath>$(SolutionDir)\TorchBinaries\Torch.API.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Torch.Server">
+      <HintPath>$(SolutionDir)\TorchBinaries\Torch.Server.exe</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="HavokWrapper">
+      <HintPath>$(SolutionDir)\GameBinaries\HavokWrapper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Audio">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Audio.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Dedicated">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Dedicated.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Game">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Game.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Game.XmlSerializers">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Game.XmlSerializers.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Input">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Input.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Library">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Library.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Math">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Math.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.NativeWrapper">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.NativeWrapper.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Render">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Render.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Render11">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Render11.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="VRage.Scripting">
+      <HintPath>$(SolutionDir)\GameBinaries\VRage.Scripting.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>$(SolutionDir)\TorchBinaries\NLog.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GlobalMarketCommands.cs" />
+    <Compile Include="GlobalMarketConfig.cs" />
+    <Compile Include="MyFixedPointExtensions.cs" />
+    <Compile Include="PurchaseOrder.cs" />
+    <Compile Include="XmlExtensions.cs" />
+    <Page Include="GlobalMarketControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="GlobalMarketControl.xaml.cs">
+      <DependentUpon>GlobalMarketControl.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GlobalMarketPlugin.cs" />
+    <Compile Include="MyObjectBuilderPhysicalObjectComparer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="manifest.xml" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="Zip" BeforeTargets="AfterBuild" Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <MakeDir Directories="$(MSBuildProjectDirectory)\zip" />
+    <ZipDirectory SourceDirectory="$(OutputPath)" DestinationFile="$(MSBuildProjectDirectory)\zip\$(MSBuildProjectName).zip" Overwrite="true" />
+  </Target>
 </Project>

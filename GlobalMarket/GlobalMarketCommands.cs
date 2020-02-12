@@ -62,16 +62,14 @@ namespace GlobalMarket
                 .GroupBy(
                     it => it.Content,
                     it => it.Amount,
-                    (physicalObject, amounts) => (
-                        physicalObject, amount: amounts.Aggregate(MyFixedPoint.Zero, (acc, x) => acc + x)
-                    ),
+                    (physicalObject, amounts) => (physicalObject, amount: amounts.Aggregate()),
                     new MyObjectBuilderPhysicalObjectComparer()
                 )
                 .Select(it => $"{it.physicalObject.TypeId}/{it.physicalObject.SubtypeName}({it.amount})");
 
             if (TryGetPlayerInventory(out var playerInventory))
             {
-                Respond("Items in your inventory:", Format(playerInventory));
+                Respond("Items in player inventory:", Format(playerInventory));
             }
 
             if (TryGetAimedHavePermissionCargoInventory(out var aimedInventory))
@@ -111,12 +109,12 @@ namespace GlobalMarket
             }
 
             MyDefinitionId definitionId;
-            MyPhysicalInventoryItem[] playerInventoryMatchedItems;
-            MyPhysicalInventoryItem[] cargoInventoryMatchedItems;
+            IReadOnlyList<MyPhysicalInventoryItem> playerInventoryMatchedItems;
+            IReadOnlyList<MyPhysicalInventoryItem> cargoInventoryMatchedItems;
 
             bool NoItemMatched()
             {
-                if (playerInventoryMatchedItems.Length != 0 || cargoInventoryMatchedItems.Length != 0) return false;
+                if (playerInventoryMatchedItems.Count != 0 || cargoInventoryMatchedItems.Count != 0) return false;
                 Respond("No such item in inventory");
                 return true;
             }
@@ -130,23 +128,23 @@ namespace GlobalMarket
                 }
 
                 playerInventoryMatchedItems = playerInventoryItems
-                    .Where(it => it.Content.GetObjectId() == definitionId).ToArray();
+                    .Where(it => it.Content.GetObjectId() == definitionId).ToList();
                 cargoInventoryMatchedItems = cargoInventoryItems
-                    .Where(it => it.Content.GetObjectId() == definitionId).ToArray();
+                    .Where(it => it.Content.GetObjectId() == definitionId).ToList();
                 if (NoItemMatched()) return;
             }
             else
             {
                 playerInventoryMatchedItems = playerInventoryItems
-                    .Where(it => it.Content.SubtypeName == itemName).ToArray();
+                    .Where(it => it.Content.SubtypeName == itemName).ToList();
                 cargoInventoryMatchedItems = cargoInventoryItems
-                    .Where(it => it.Content.SubtypeName == itemName).ToArray();
+                    .Where(it => it.Content.SubtypeName == itemName).ToList();
                 if (NoItemMatched()) return;
 
                 var distinctPhysicalObjects = playerInventoryMatchedItems.Concat(cargoInventoryMatchedItems)
                     .Select(it => it.Content)
-                    .Distinct(new MyObjectBuilderPhysicalObjectComparer()).ToArray();
-                if (distinctPhysicalObjects.Length > 1)
+                    .Distinct(new MyObjectBuilderPhysicalObjectComparer()).ToList();
+                if (distinctPhysicalObjects.Count > 1)
                 {
                     Respond("Multi items matched, please use fully qualified name:",
                         distinctPhysicalObjects.Select(it => $"{it.TypeId}/{it.SubtypeName}")
@@ -157,12 +155,8 @@ namespace GlobalMarket
                 definitionId = distinctPhysicalObjects[0].GetObjectId();
             }
 
-            var playerInventoryHave = playerInventoryMatchedItems
-                .Select(it => it.Amount)
-                .Aggregate(MyFixedPoint.Zero, (acc, x) => acc + x);
-            var cargoInventoryHave = cargoInventoryMatchedItems
-                .Select(it => it.Amount)
-                .Aggregate(MyFixedPoint.Zero, (acc, x) => acc + x);
+            var playerInventoryHave = playerInventoryMatchedItems.Select(it => it.Amount).Aggregate();
+            var cargoInventoryHave = cargoInventoryMatchedItems.Select(it => it.Amount).Aggregate();
             var need = (MyFixedPoint) amount;
             //totalHave may overflow
             if (playerInventoryHave < need && cargoInventoryHave < need &&
@@ -284,20 +278,17 @@ namespace GlobalMarket
             cargoInventory?.AddItems(addToCargoInventory, objectBuilder);
             Respond($"You bought {definitionId} ({purchaseOrder.Amount}) for ${purchaseOrder.Price}");
 
-            //if seller not exist
-            if (sellerNotExist) return;
-
             var tax = (long) (Config.IllegalTaxRateDouble * purchaseOrder.Price);
+            var s = $"<{orderNumber}> purchased by '{player.DisplayName}' for ${purchaseOrder.Price}(tax ${tax})";
+
+            if (Config.BroadcastOnBuy) SendMessage($"The order {s}");
+
+            if (sellerNotExist) return;
             MyBankingSystem.RequestBalanceChange(sellerIdentityId, purchaseOrder.Price - tax);
 
-            var s = $"<{orderNumber}> purchased by '{player.DisplayName}' for ${purchaseOrder.Price}(tax ${tax})";
-            if (Config.BroadcastOnBuy)
-            {
-                SendMessage($"The order {s}");
-            }
-            else if (Config.NotifySellerOnBuy &&
-                     MySession.Static.Players.TryGetPlayerId(sellerIdentityId, out var sellerPlayerId) &&
-                     MySession.Static.Players.IsPlayerOnline(ref sellerPlayerId))
+            if (!Config.BroadcastOnBuy && Config.NotifySellerOnBuy &&
+                MySession.Static.Players.TryGetPlayerId(sellerIdentityId, out var sellerPlayerId) &&
+                MySession.Static.Players.IsPlayerOnline(ref sellerPlayerId))
             {
                 SendMessage(
                     $"Your order {s}",
