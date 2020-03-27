@@ -23,6 +23,8 @@ If player aim at CargoContainer and have permission to access it, item will deli
 
 "!market sell" will take items from player inventory first, then from CargoContainer.
 
+Item name is not case sensitive.
+
 Tax are borne by the seller.
 
 # License

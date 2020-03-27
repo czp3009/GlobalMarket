@@ -18,6 +18,7 @@ using VRage;
 using VRage.Game;
 using VRage.Game.Entity;
 using VRage.Game.ModAPI;
+using VRage.Game.ModAPI.Ingame;
 using VRage.ObjectBuilders;
 
 namespace GlobalMarket
@@ -121,24 +122,19 @@ namespace GlobalMarket
 
             if (itemName.Contains('/'))
             {
-                if (!MyDefinitionId.TryParse(itemName, out definitionId))
-                {
-                    Respond("Invalid itemType");
-                    return;
-                }
-
                 playerInventoryMatchedItems = playerInventoryItems
-                    .Where(it => it.Content.GetObjectId() == definitionId).ToList();
+                    .Where(it => it.Content.GetObjectId().ToString().EqualsIgnoreCase(itemName)).ToList();
                 cargoInventoryMatchedItems = cargoInventoryItems
-                    .Where(it => it.Content.GetObjectId() == definitionId).ToList();
+                    .Where(it => it.Content.GetObjectId().ToString().EqualsIgnoreCase(itemName)).ToList();
                 if (NoItemMatched()) return;
+                definitionId = playerInventoryMatchedItems.Concat(cargoInventoryMatchedItems).First().GetDefinitionId();
             }
             else
             {
                 playerInventoryMatchedItems = playerInventoryItems
-                    .Where(it => it.Content.SubtypeName == itemName).ToList();
+                    .Where(it => it.Content.SubtypeName.EqualsIgnoreCase(itemName)).ToList();
                 cargoInventoryMatchedItems = cargoInventoryItems
-                    .Where(it => it.Content.SubtypeName == itemName).ToList();
+                    .Where(it => it.Content.SubtypeName.EqualsIgnoreCase(itemName)).ToList();
                 if (NoItemMatched()) return;
 
                 var distinctPhysicalObjects = playerInventoryMatchedItems.Concat(cargoInventoryMatchedItems)

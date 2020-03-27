@@ -138,6 +138,7 @@
   <ItemGroup>
     <Compile Include="GlobalMarketCommands.cs" />
     <Compile Include="GlobalMarketConfig.cs" />
+    <Compile Include="EqualsExtensions.cs" />
     <Compile Include="MyFixedPointExtensions.cs" />
     <Compile Include="PurchaseOrder.cs" />
     <Compile Include="XmlExtensions.cs" />
