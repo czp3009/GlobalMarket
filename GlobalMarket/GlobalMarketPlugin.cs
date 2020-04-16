@@ -93,7 +93,7 @@ namespace GlobalMarket
         }
 
         // ReSharper disable once MemberCanBePrivate.Global
-        internal Task SavePurchaseOrdersSync() => _fifoTaskFactory.StartNew(SavePurchaseOrders);
+        internal void SavePurchaseOrdersSync() => _fifoTaskFactory.StartNew(SavePurchaseOrders);
 
         public string AddNewPurchaseOrder(PurchaseOrder purchaseOrder)
         {

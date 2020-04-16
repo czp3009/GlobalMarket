@@ -20,6 +20,7 @@ using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.Game.ModAPI.Ingame;
 using VRage.ObjectBuilders;
+using VRageMath;
 
 namespace GlobalMarket
 {
@@ -446,7 +447,7 @@ namespace GlobalMarket
         private void SendMessage(string message, ulong targetSteamId = 0)
         {
             Context.Torch.CurrentSession.Managers.GetManager<IChatManagerServer>()
-                ?.SendMessageAsOther(null, message, null, targetSteamId);
+                ?.SendMessageAsOther("GlobalMarket", message, Color.Gold, targetSteamId);
         }
 
         private static void SendDialog(string title, string subtitle, IEnumerable<string> enumerable, ulong target) =>

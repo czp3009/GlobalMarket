@@ -9,10 +9,5 @@ namespace GlobalMarket
         {
             return string.Equals(a, b, StringComparison.OrdinalIgnoreCase);
         }
-        
-        internal static bool EqualsIgnoreCase(this MyDefinitionId a, MyDefinitionId b)
-        {
-            return string.Equals(a.ToString(), b.ToString(), StringComparison.OrdinalIgnoreCase);
-        }
     }
 }
