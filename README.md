@@ -21,6 +21,8 @@ A Torch plugin that let players sell and buy items to and from market via comman
 # Note
 If player aim at CargoContainer and have permission to access it, item will delivery to CargoContainer first when use "!market buy".
 
+'Aim At' means player must hold a tool and actually point at cargo port(HUD highlight).
+
 "!market sell" will take items from player inventory first, then from CargoContainer.
 
 Item name is not case sensitive.
