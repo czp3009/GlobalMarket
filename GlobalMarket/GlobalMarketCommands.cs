@@ -281,7 +281,7 @@ namespace GlobalMarket
             if (Config.BroadcastOnBuy) SendMessage($"The order {s}");
 
             if (sellerNotExist) return;
-            MyBankingSystem.RequestBalanceChange(sellerIdentityId, purchaseOrder.Price - tax);
+            MyBankingSystem.ChangeBalance(sellerIdentityId, purchaseOrder.Price - tax);
 
             if (!Config.BroadcastOnBuy && Config.NotifySellerOnBuy &&
                 MySession.Static.Players.TryGetPlayerId(sellerIdentityId, out var sellerPlayerId) &&
