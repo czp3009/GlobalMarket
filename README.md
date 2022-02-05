@@ -1,24 +1,24 @@
 ﻿# GlobalMarket
-A [Torch](https://torchapi.net/) plugin that let players sell and buy items to and from market via command.
+A [Torch](https://torchapi.com/) plugin that let players sell and buy items to and from market via command.
 
-https://torchapi.net/plugins/item/025e099c-c046-4d4a-89c4-d770fe485e16
+https://torchapi.com/plugins/view/?guid=025e099c-c046-4d4a-89c4-d770fe485e16
 
 # Command
-!market help - Show help message
+`!market help` - Show help message
 
-!market inventory - Show all items in inventory and cargo
+`!market inventory` - Show all items in inventory and cargo
 
-!market sell <itemName> <amount> <price> - Sell items to market
+`!market sell <itemName> <amount> <price>` - Sell items to market
 
-!market buy <orderNumber> - Buy items from market
+`!market buy <orderNumber>` - Buy items from market
 
-!market search \[itemName\] - Search items in market
+`!market search <itemName>` - Search items in market
 
-!market longsearch \[itemName\] - Search items in market with dialog
+`!market longsearch <itemName>` - Search items in market with dialog
 
-!market my - Show my items in market
+`!market my` - Show my items in market
 
-!market longmy - Show my items in market with dialog
+`!market longmy` - Show my items in market with dialog
 
 # Note
 If player aim at CargoContainer and have permission to access it, item will delivery to CargoContainer first when use "!market buy".
