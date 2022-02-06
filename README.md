@@ -1,7 +1,9 @@
 ﻿# GlobalMarket
 A [Torch](https://torchapi.com/) plugin that let players sell and buy items to and from market via command.
 
-https://torchapi.com/plugins/view/?guid=025e099c-c046-4d4a-89c4-d770fe485e16
+Torch link: https://torchapi.com/plugins/view/?guid=025e099c-c046-4d4a-89c4-d770fe485e16
+
+Github link: https://github.com/czp3009/GlobalMarket
 
 # Command
 `!market help` - Show help message
